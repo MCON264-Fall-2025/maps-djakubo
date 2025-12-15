@@ -1,5 +1,8 @@
 package hashmap_exercises;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * LeetCode 2342 - Max Sum of a Pair With Equal Sum of Digits
  *
@@ -26,18 +29,26 @@ public class MaxSumPairEqualDigitSum {
      *         or -1 if no such pair exists
      */
     public int maximumSum(int[] nums) {
-        // TODO: implement
-        // Common approach:
-        // - For each number, compute its digit sum.
-        // - Use a Map<Integer, Integer> digitSum -> highest number seen with this digit sum.
-        // - For each number:
-        //     if we already have a value for this digit sum,
-        //        update answer with (nums[i] + bestSoFar),
-        //        and update bestSoFar if nums[i] is larger.
-        //     else,
-        //        store nums[i] as bestSoFar.
-        // - Return answer.
-        return -1;
+
+        Map<Integer, Integer> sums = new HashMap<>();
+        int greatestDigitSum = -1;
+
+        for(int num :nums){
+
+            //if same digit sum was already found
+            if(sums.containsKey(digitSum(num))){
+                int newSum = sums.get(digitSum(num)) + num;
+                if(newSum>greatestDigitSum){
+                    greatestDigitSum = newSum;
+                }
+            }
+            //if the number is greater than the other number with the same digitSum update with the new number
+            //This way if there are more than two values with the same digitSum it will return the highest sum
+            if(!sums.containsKey(digitSum(num)) || num > sums.get(digitSum(num)) ){
+                sums.put(digitSum(num), num);
+            }
+        }
+        return greatestDigitSum;
     }
 
     /**
@@ -45,7 +56,6 @@ public class MaxSumPairEqualDigitSum {
      * Computes the sum of digits of a non-negative integer.
      */
     int digitSum(int x) {
-        // TODO (optional): implement and use it from maximumSum
         int sum = 0;
         while (x > 0) {
             sum += x % 10;
